@@ -1,0 +1,11 @@
+{
+    "ignore": [
+      "README.md",
+      "test/.gitkeep"
+    ],
+    "commands": {
+      "Compile": "npm run compile",
+      "Migrate": "npm run migrate",
+      "Test contracts": "npm run test"
+    }
+  }

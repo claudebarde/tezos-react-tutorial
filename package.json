@@ -1,0 +1,23 @@
+{
+  "name": "tezos-starter-kit",
+  "version": "1.0.0",
+  "description": "",
+  "devDependencies": {
+    "promise-retry": "^1.1.1",
+    "truffle": "^5.2.0-tezos.1",
+    "lodash": "^4.17.15",
+    "@taquito/taquito": "^6.1.0-beta.0"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "clean": "rm -rf ./build",
+    "wait-for-sandbox": "node ./scripts/sandbox/waitForNetwork.js",
+    "start-sandbox": "./scripts/sandbox/start_sandbox.sh",
+    "kill-sandbox": "./scripts/sandbox/kill_sandbox.sh",
+    "restart-sandbox": "./scripts/sandbox/restart_sandbox.sh"
+  },
+  "author": "matej.sima@stove-labs.com",
+  "license": "MIT"
+}

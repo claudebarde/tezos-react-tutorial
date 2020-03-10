@@ -1,0 +1,87 @@
+#root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.App {
+  width: 40%;
+  text-align: center;
+}
+
+.app-title {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+.app-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 50px;
+}
+
+.logo img {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+/*.coffee_selection {
+  margin: 20px 10px;
+  padding: 20px 10px;
+  font-size: 1.5rem;
+  border: solid 2px #d69174;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.coffee_selection:hover {
+  background-color: #d69174;
+}*/
+
+.coffee_selection {
+  margin: 20px 10px;
+  border: solid 2px #f2ae93;
+  border-radius: 10px;
+}
+
+.coffee_selection .card-content {
+  font-size: 1.5rem;
+  background-color: #f2ae93;
+}
+
+.action {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.action:hover {
+  font-weight: bold;
+}
+
+.wallet {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.balance {
+  font-size: 0.8rem;
+  padding-right: 10px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .App {
+    width: 90%;
+  }
+
+  .wallet {
+    position: relative;
+    right: 0px;
+    margin-bottom: 10px;
+  }
+}
