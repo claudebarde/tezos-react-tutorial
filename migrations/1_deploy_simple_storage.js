@@ -3,10 +3,10 @@ const { alice } = require("../scripts/sandbox/accounts");
 
 const initial_storage = {
   menu: {
-    cappuccino: 2,
-    latte: 3,
-    americano: 4,
-    macchiato: 1.5
+    cappuccino: 2500000,
+    latte: 2000000,
+    americano: 1600000,
+    macchiato: 3000000
   },
   customers: { [alice.pkh]: 0 },
   total: 0,
