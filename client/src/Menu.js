@@ -50,7 +50,7 @@ const Menu = ({
     if (userPoints === undefined) {
       redeemPointsButton = <span>No point available</span>;
     } else if (userPoints >= 0 && userPoints <= 9) {
-      redeemPointsButton = <span>Number of points: {userPoints}</span>;
+      redeemPointsButton = <span>Available points: {userPoints}</span>;
     } else if (userPoints === 10) {
       redeemPointsButton = <span className="action">Redeem Points</span>;
     }
@@ -88,6 +88,9 @@ const Menu = ({
         </div>
         <div className="message-body">
           <p>Your transaction is being processed, please wait.</p>
+          <p className="coffee-loader">
+            <img src="coffee-cup.png" alt="coffee-cup" />
+          </p>
           <p>Transaction number: {txHash}</p>
         </div>
       </div>

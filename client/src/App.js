@@ -5,10 +5,14 @@ import Menu from "./Menu";
 import "./App.css";
 import "./bulma.css";
 
-const contractAddress = "KT1C4MdSKdAkzHtGYUWpivzssvJedjWg326A";
+/* PUT HERE THE CONTRACT ADDRESS FOR YOUR OWN SANDBOX! */
+const contractAddress = "KT19XvkkFvGmHMDzauP1LKQgBDnXPFCMV8B7";
 
 const shortenAddress = addr =>
   addr.slice(0, 6) + "..." + addr.slice(addr.length - 6);
+
+const mutezToTez = mutez =>
+  Math.round((parseInt(mutez) / 1000000 + Number.EPSILON) * 100) / 100;
 
 const App = () => {
   const [contractInstance, setContractInstance] = useState(undefined);
@@ -17,15 +21,16 @@ const App = () => {
   const [balance, setBalance] = useState(undefined);
   const [userPoints, setUserPoints] = useState(undefined);
   const [isOwner, setIsOwner] = useState(false);
+  const [contractBalance, setContractBalance] = useState(0);
   const tezbridge = window.tezbridge;
 
   const initWallet = async () => {
     try {
       // sets rpc host
-      const rpc = await tezbridge.request({
+      /*const rpc = await tezbridge.request({
         method: "set_host",
         host: "http://localhost:8732"
-      });
+      });*/
       // gets user's address
       const _address = await tezbridge.request({ method: "get_source" });
       setUserAddress(_address);
@@ -37,7 +42,11 @@ const App = () => {
       const points = storage.customers.get(_address);
       setUserPoints(parseInt(points));
       // compares user's address with owner's address
-      if (storage.owner === _address) setIsOwner(true);
+      if (storage.owner === _address) {
+        setIsOwner(true);
+        const _contractBalance = await Tezos.tz.getBalance(contractAddress);
+        setContractBalance(_contractBalance.c[0]);
+      }
     } catch (error) {
       console.log("error fetching the address or balance:", error);
     }
@@ -93,7 +102,16 @@ const App = () => {
             <span className="balance">ꜩ {balance.toNumber() / 1000000}</span>
             <div className="field is-grouped">
               <p className="control">
-                <button className="button is-success is-light is-small">
+                <button
+                  className="button is-success is-light is-small"
+                  onClick={async () => {
+                    setUserAddress(undefined);
+                    setBalance(undefined);
+                    setUserPoints(undefined);
+                    setIsOwner(undefined);
+                    await initWallet();
+                  }}
+                >
                   {shortenAddress(userAddress)}
                 </button>
               </p>
@@ -103,7 +121,7 @@ const App = () => {
                     className="button is-warning is-light is-small"
                     onClick={withdraw}
                   >
-                    Withdraw Income
+                    Withdraw ꜩ {mutezToTez(contractBalance)}
                   </button>
                 </p>
               )}
@@ -128,7 +146,7 @@ const App = () => {
           setUserPoints={setUserPoints}
         />
       )}
-      {/*<div>Icons made by <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>*/}
+      {/*<div>Icons made by <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a><a href="https://www.vecteezy.com/free-vector/coffee-cute">Coffee Cute Vectors by Vecteezy</a></div>*/}
     </div>
   );
 };
