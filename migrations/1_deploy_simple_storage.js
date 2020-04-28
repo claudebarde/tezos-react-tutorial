@@ -1,14 +1,17 @@
 const pointOfSale = artifacts.require("PointOfSale");
 const { alice } = require("../scripts/sandbox/accounts");
+const { MichelsonMap } = require('@taquito/taquito');
 
 const initial_storage = {
-  menu: {
-    cappuccino: 2500000,
-    latte: 2000000,
-    americano: 1600000,
-    macchiato: 3000000
-  },
-  customers: { [alice.pkh]: 0 },
+  menu: MichelsonMap.fromLiteral({
+    "cappuccino": 2500000,
+    "latte": 2000000,
+    "americano": 1600000,
+    "macchiato": 3000000
+    }),
+  customers: MichelsonMap.fromLiteral({
+    [`${alice.pkh}`]: 0
+    }),
   total: 0,
   owner: alice.pkh
 };
