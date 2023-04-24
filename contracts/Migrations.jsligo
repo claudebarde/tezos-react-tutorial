@@ -1,0 +1,17 @@
+type migrations = {
+  owner: address,
+  last_completed_migration : int,
+}
+
+type return_ = [list<operation>, migrations];
+
+let main = ((completed_migration: int, migrations: migrations): return_ => {
+  if(Tezos.get_sender() != migrations.owner){
+    failwith("Wrong address") as return_;
+  } else {
+    return [
+    (list([]) as list<operation>), 
+    {...migrations, last_completed_migration: completed_migration}
+    ]
+  }
+});

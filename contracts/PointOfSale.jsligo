@@ -1,0 +1,69 @@
+type action =
+| ["RedeemPoints"]
+| ["Buy", string]
+| ["Withdraw"];
+
+type storage = {
+  menu: map<string, tez>,
+  customers: map<address, nat>,
+  total: tez,
+  owner: address
+};
+
+type return_ = [list<operation>, storage];
+
+const addPoint = (storage: storage): map<address, nat> => {
+  /* checks if customer already exists or has points */
+  const customer_points: nat = Option.unopt(Map.find_opt(Tezos.get_sender(), storage.customers));
+  let updated_customers: map<address, nat> = storage.customers;
+  if (customer_points > (0 as nat)) {
+    updated_customers = Map.update(Tezos.get_sender(), Some(customer_points + (1 as nat)), storage.customers);
+  }  else {
+    updated_customers = Map.add(Tezos.get_sender(), (1 as nat), storage.customers);
+  }
+  return updated_customers;
+};
+
+/* Customers can redeem their points to have a free coffee! */
+const redeemPoints = (storage: storage): return_ => {
+  /* We test if customer has enough points */
+  const customer_points: nat = Option.unopt(Map.find_opt(Tezos.get_sender(), storage.customers));
+  if (customer_points >= (10 as nat)) {
+    const updated_customers = Map.update(Tezos.get_sender(), Some (abs(customer_points - (10 as nat))), storage.customers);
+    return [list([]), {...storage, customers: updated_customers}];
+  } else {
+    /* if points were found, we check if customer has enough of them */
+    /* if no point found, error */
+    return failwith("You don't have enough points!")
+  }
+};
+
+/* Customers buy coffee */
+const buy = (item: string, storage: storage): return_ => {
+  const price: tez = Option.unopt_with_error(Map.find_opt(item, storage.menu), failwith("No such item found!"));
+  if (Tezos.get_amount() < price) {
+    return failwith("You didn't send enough tez!");
+  } else {
+    return [list([]), {...storage, total: storage.total + Tezos.get_amount(), customers: addPoint(storage)}];
+  }
+};
+
+
+/* Owner withdraws total balance of the contract */
+const withdraw = (storage: storage): return_ => {
+  /* checks if user is allowed to withdraw balance */
+  if (Tezos.get_sender() != storage.owner){
+    return failwith ("Your are not allowed to perform this action!");
+  } else {
+    const receiver : contract<unit> = Option.unopt_with_error(Tezos.get_contract_opt(storage.owner), failwith("Wrong address provided!"));
+    const op : operation = Tezos.transaction(unit, Tezos.get_balance(), receiver);
+    return [list([op]), storage];
+  }
+}
+
+const main = (parameter: action, storage: storage): return_ =>
+  match(parameter, {
+    RedeemPoints: () => redeemPoints (storage),
+    Buy: (item) => buy (item, storage),
+    Withdraw: () => withdraw (storage)
+  });
